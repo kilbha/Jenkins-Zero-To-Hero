@@ -2,7 +2,7 @@ pipeline {
   agent {
     docker {
       image 'bhars77/maven-java17-docker-agent:latest'
-      args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
+      args '-v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
     }
   }
   stages {
@@ -52,7 +52,7 @@ pipeline {
         }
         steps {
             withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
-                sh '''
+                sh '''                    
                     echo "Current directory: $(pwd)"
                     echo "Listing files:"
                     ls -la
