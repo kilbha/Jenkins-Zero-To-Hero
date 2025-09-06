@@ -53,21 +53,16 @@ pipeline {
         steps {
             withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
                 sh '''
-                      su - jenkins -c '
-                          echo "Current directory: $(pwd)"
-                          echo "Listing files:"
-                          ls -la
-                          echo "Checking if .git exists:"
-                          ls -la .git || echo ".git not found!"
-                          git config user.email "bhargav.mech12@gmail.com"
-                          git config user.name "Bhargav Killu"
-                          BUILD_NUMBER=${BUILD_NUMBER}
-                          sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
-                          git add java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
-                          git commit -m "Update deployment image to version ${BUILD_NUMBER}"
-                          git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
-                      '
+                      chown -R root:root .
+                      git config user.email "bhargav.mech12@gmail.com"
+                      git config user.name "Bhargav Killu"
+                      BUILD_NUMBER=${BUILD_NUMBER}
+                      sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
+                      git add java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
+                      git commit -m "Update deployment image to version ${BUILD_NUMBER}"
+                      git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
                   '''
+
             }
         }
     }
