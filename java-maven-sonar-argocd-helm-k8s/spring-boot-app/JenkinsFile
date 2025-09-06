@@ -53,6 +53,11 @@ pipeline {
         steps {
             withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
                 sh '''
+                    echo "Current directory: $(pwd)"
+                    echo "Listing files:"
+                    ls -la
+                    echo "Checking if .git exists:"
+                    ls -la .git || echo ".git not found!"
                     git config user.email "bhargav.mech12@gmail.com"
                     git config user.name "Bhargav Killu"
                     BUILD_NUMBER=${BUILD_NUMBER}
