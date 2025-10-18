@@ -24,7 +24,7 @@ pipeline {
         SONAR_URL = "http:///13.217.225.48/:9000"
       }
       steps {
-        withCredentials([string(credentialsId: 'sonarqube', variable: 'sonar_token')]) {
+        withCredentials([string(credentialsId: 'sonar_token', variable: 'sonar_token')]) {
           sh 'cd java-maven-sonar-argocd-helm-k8s/spring-boot-app && mvn sonar:sonar -Dsonar.login=$sonar_token -Dsonar.host.url=${SONAR_URL}'
         }
       }
@@ -51,7 +51,7 @@ pipeline {
             GIT_USER_NAME = "kilbha"
         }
         steps {
-            withCredentials([string(credentialsId: 'github', variable: 'git_token')]) {
+            withCredentials([string(credentialsId: 'git_token', variable: 'git_token')]) {
                 sh '''
                       chown -R root:root .
                       git config user.email "bhargav.mech12@gmail.com"
