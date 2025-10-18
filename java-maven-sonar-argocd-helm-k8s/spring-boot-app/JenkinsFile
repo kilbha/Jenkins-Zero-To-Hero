@@ -51,7 +51,7 @@ pipeline {
             GIT_USER_NAME = "kilbha"
         }
         steps {
-            withCredentials([string(credentialsId: 'git_token', variable: 'git_token')]) {
+            withCredentials([string(credentialsId: 'github_token', variable: 'git_token')]) {
                 sh '''
                       chown -R root:root .
                       git config user.email "bhargav.mech12@gmail.com"
