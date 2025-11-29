@@ -8,9 +8,9 @@ pipeline {
   stages {
     stage('Cleanup Workspace') {
     steps {
-        deleteDir()
+        sh 'cd /var/lib/jenkins/workspace/ && sudo rm -rf sprint-boot-app-pipeline-2'
     }
-}
+    }
     stage('Checkout') {
       steps {
         sh 'echo passed'
