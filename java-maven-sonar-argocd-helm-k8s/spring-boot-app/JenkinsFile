@@ -11,13 +11,7 @@ pipeline {
           sh 'sudo rm -rf /var/lib/jenkins/workspace/sprint-boot-app-pipeline-2 || true'
       }
     }
-
-    stage('Checkout') {
-      steps {
-        deleteDir()     // remove old workspace
-        checkout scm    // CHECKOUT INSIDE DOCKER AGENT
-      }
-    }
+    
     stage('Build and Test') {
       steps {
         sh 'ls -ltr'
