@@ -2,7 +2,7 @@ pipeline {
   agent {
     docker {
       image 'bhars77/maven-java17-docker-agent:latest'
-      args '--user 124:127 -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
+      args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
     }
   }
   stages {
@@ -53,8 +53,7 @@ pipeline {
         steps {
             withCredentials([string(credentialsId: 'github_token', variable: 'git_token')]) {
                 sh '''    
-                      ls -ltr     
-                      ls -la             
+                      git config --global --add safe.directory '*'         
                       git config user.email "bhargav.mech12@gmail.com"
                       git config user.name "Bhargav Killu"
                       BUILD_NUMBER=${BUILD_NUMBER}
