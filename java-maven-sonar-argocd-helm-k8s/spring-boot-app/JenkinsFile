@@ -5,7 +5,7 @@ pipeline {
       args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
     }
   }
-  stages {
+  stages {    
     stage('Cleanup Workspace') {
       steps {
           sh 'sudo rm -rf /var/lib/jenkins/workspace/sprint-boot-app-pipeline-2 || true'
@@ -54,13 +54,13 @@ pipeline {
             withCredentials([string(credentialsId: 'github_token', variable: 'git_token')]) {
                 sh '''    
                       git config --global --add safe.directory '*'         
-                      git config user.email "bhargav.mech12@gmail.com"
-                      git config user.name "Bhargav Killu"
+                      git config user.email ""ci-bot@kilbha.com""
+                      git config user.name "ci-bot"
                       BUILD_NUMBER=${BUILD_NUMBER}
                       sed -i "s|image: bhars77/spring-boot-app:.*|image: bhars77/spring-boot-app:${BUILD_NUMBER}|g" java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
                       git add java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
                       git commit -m "Update deployment image to version ${BUILD_NUMBER}"
-                      git push https://${git_token}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main                                            
+                      git push https://${git_token}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:ci-updates                                         
                   '''
 
             } 
