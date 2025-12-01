@@ -52,7 +52,9 @@ pipeline {
         }
         steps {
             withCredentials([string(credentialsId: 'github_token', variable: 'git_token')]) {
-                sh '''                      
+                sh '''    
+                      ls -ltr     
+                      ls -la             
                       git config user.email "bhargav.mech12@gmail.com"
                       git config user.name "Bhargav Killu"
                       BUILD_NUMBER=${BUILD_NUMBER}
