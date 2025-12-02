@@ -74,4 +74,6 @@ Hurray !! Now you can access the `SonarQube Server` on `http://<ip-address>:9000
 Use existing code from JenkinsFile
 Use this for reference -- https://medium.com/@lilnya79/integrating-jenkins-with-trivy-222eaa7a70be
 
+### Setting Slack
+https://blog.devops.dev/how-to-push-jenkins-notification-to-email-and-slack-2d784bcce20f
 
