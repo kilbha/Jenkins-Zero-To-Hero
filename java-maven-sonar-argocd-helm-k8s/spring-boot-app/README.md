@@ -70,3 +70,8 @@ cd /opt/sonarqube/bin/linux-x86-64
 Hurray !! Now you can access the `SonarQube Server` on `http://<ip-address>:9000` 
 
 
+### Setting Trivia
+Use existing code from JenkinsFile
+Use this for reference -- https://medium.com/@lilnya79/integrating-jenkins-with-trivy-222eaa7a70be
+
+
