@@ -14,7 +14,7 @@ pipeline {
     
     stage('Build and Test') {
       steps {
-        sh 'ls -ltr'
+        sh 'ls -ltra'
         // build the project and create a JAR file
         sh 'cd java-maven-sonar-argocd-helm-k8s/spring-boot-app && mvn clean package'
       }
@@ -99,6 +99,20 @@ pipeline {
                   '''
 
             } 
+        }
+    }
+
+    post {
+        success {
+            slackSend color: 'good', message: "Build SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
+        }
+
+        failure {
+            slackSend color: 'danger', message: "Build FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER}\nError: ${currentBuild.currentResult}"
+        }
+
+        always {
+            echo "Build finished"
         }
     }
   }
