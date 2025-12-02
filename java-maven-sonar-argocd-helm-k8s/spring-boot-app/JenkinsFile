@@ -90,6 +90,7 @@ pipeline {
                       git config --global --add safe.directory '*'         
                       git config user.email ""ci-bot@kilbha.com""
                       git config user.name "ci-bot"
+                      git pull --rebase origin ci-updates
                       BUILD_NUMBER=${BUILD_NUMBER}
                       sed -i "s|image: bhars77/spring-boot-app:.*|image: bhars77/spring-boot-app:${BUILD_NUMBER}|g" java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
                       git add java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
