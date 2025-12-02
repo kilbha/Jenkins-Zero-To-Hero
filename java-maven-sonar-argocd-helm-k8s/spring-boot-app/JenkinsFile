@@ -9,7 +9,7 @@ pipeline {
     stage('Checkout') {
       steps {
           // sh 'sudo rm -rf /var/lib/jenkins/workspace/sprint-boot-app-pipeline-2 || true'
-          deleteDir()          
+          // deleteDir()          
           sh "git config --global --add safe.directory '${WORKSPACE}'"
       }
     }
