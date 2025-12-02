@@ -54,7 +54,15 @@ pipeline {
             steps {
                 script {
                     // Run Trivy to scan the Docker image
-                    def trivyOutput = sh(script: "trivy image $DOCKER_IMAGE", returnStdout: true).trim()
+                    // def trivyOutput = sh(script: "trivy image $DOCKER_IMAGE", returnStdout: true).trim()
+                    def trivyOutput = sh(
+                        script: """
+                            docker run --rm \
+                                -v /var/run/docker.sock:/var/run/docker.sock \
+                                aquasec/trivy:latest image --no-progress bhars77/spring-boot-app:${BUILD_NUMBER}
+                        """,
+                        returnStdout: true
+                    ).trim()
 
                     // Display Trivy scan results
                     println trivyOutput
