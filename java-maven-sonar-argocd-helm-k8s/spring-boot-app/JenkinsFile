@@ -48,40 +48,40 @@ pipeline {
         }
       }
     }
-    // stage('Scan Docker Image') {
-    //         environment {
-    //           DOCKER_IMAGE = "bhars77/spring-boot-app:${BUILD_NUMBER}"
-    //           // DOCKERFILE_LOCATION = "java-maven-sonar-argocd-helm-k8s/spring-boot-app/Dockerfile"
-    //           REGISTRY_CREDENTIALS = credentials('docker_cred')
-    //         }
-    //         steps {
-    //             script {
-    //                 // Run Trivy to scan the Docker image
-    //                 // def trivyOutput = sh(script: "trivy image $DOCKER_IMAGE", returnStdout: true).trim()
-    //                 def trivyOutput = sh(
-    //                     script: """
-    //                         docker run --rm \
-    //                             -v /var/run/docker.sock:/var/run/docker.sock \
-    //                             aquasec/trivy:latest image --no-progress bhars77/spring-boot-app:${BUILD_NUMBER}
-    //                     """,
-    //                     returnStdout: true
-    //                 ).trim()
+    stage('Scan Docker Image') {
+            environment {
+              DOCKER_IMAGE = "bhars77/spring-boot-app:${BUILD_NUMBER}"
+              // DOCKERFILE_LOCATION = "java-maven-sonar-argocd-helm-k8s/spring-boot-app/Dockerfile"
+              REGISTRY_CREDENTIALS = credentials('docker_cred')
+            }
+            steps {
+                script {
+                    // Run Trivy to scan the Docker image
+                    // def trivyOutput = sh(script: "trivy image $DOCKER_IMAGE", returnStdout: true).trim()
+                    def trivyOutput = sh(
+                        script: """
+                            docker run --rm \
+                                -v /var/run/docker.sock:/var/run/docker.sock \
+                                aquasec/trivy:latest image --no-progress bhars77/spring-boot-app:${BUILD_NUMBER} --scanners vuln
+                        """,
+                        returnStdout: true
+                    ).trim()
 
-    //                 // Display Trivy scan results
-    //                 println trivyOutput
+                    // Display Trivy scan results
+                    println trivyOutput
 
-    //                 // Check if vulnerabilities were found
-    //                 if (trivyOutput.contains("Total: 0")) {
-    //                     echo "No vulnerabilities found in the Docker image."
-    //                 } else {
-    //                     echo "Vulnerabilities found in the Docker image."
-    //                     // You can take further actions here based on your requirements
-    //                     // For example, failing the build if vulnerabilities are found
-    //                     // error "Vulnerabilities found in the Docker image."
-    //                 }
-    //             }
-    //         }
-    // }
+                    // Check if vulnerabilities were found
+                    if (trivyOutput.contains("Total: 0")) {
+                        echo "No vulnerabilities found in the Docker image."
+                    } else {
+                        echo "Vulnerabilities found in the Docker image."
+                        // You can take further actions here based on your requirements
+                        // For example, failing the build if vulnerabilities are found
+                        // error "Vulnerabilities found in the Docker image."
+                    }
+                }
+            }
+    }
     stage('Update Deployment File') {
         environment {
             GIT_REPO_NAME = "Jenkins-Zero-To-Hero"
@@ -109,6 +109,9 @@ pipeline {
                 cd gitops-clone
 
                 git checkout ci-updates
+
+                git config user.email ""ci-bot@kilbha.com""
+                git config user.name "ci-bot"
                 git pull --rebase origin ci-updates
 
                 sed -i "s|image: bhars77/spring-boot-app:.*|image: bhars77/spring-boot-app:${BUILD_NUMBER}|g" java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
