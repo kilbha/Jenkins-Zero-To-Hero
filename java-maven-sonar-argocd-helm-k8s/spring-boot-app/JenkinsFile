@@ -88,20 +88,37 @@ pipeline {
             GIT_USER_NAME = "kilbha"
         }
         steps {
-            withCredentials([string(credentialsId: 'github_token', variable: 'git_token')]) {
-                sh '''    
-                      git config --global --add safe.directory '*'         
-                      git config user.email ""ci-bot@kilbha.com""
-                      git config user.name "ci-bot"
-                      git pull --rebase origin ci-updates
-                      BUILD_NUMBER=${BUILD_NUMBER}
-                      sed -i "s|image: bhars77/spring-boot-app:.*|image: bhars77/spring-boot-app:${BUILD_NUMBER}|g" java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
-                      git add java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
-                      git commit -m "Update deployment image to version ${BUILD_NUMBER}"
-                      git push https://${git_token}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:ci-updates                                         
-                  '''
+            // withCredentials([string(credentialsId: 'github_token', variable: 'git_token')]) {
+            //     sh '''    
+            //           git config --global --add safe.directory '*'         
+            //           git config user.email ""ci-bot@kilbha.com""
+            //           git config user.name "ci-bot"
+            //           git pull --rebase origin ci-updates
+            //           BUILD_NUMBER=${BUILD_NUMBER}
+            //           sed -i "s|image: bhars77/spring-boot-app:.*|image: bhars77/spring-boot-app:${BUILD_NUMBER}|g" java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
+            //           git add java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
+            //           git commit -m "Update deployment image to version ${BUILD_NUMBER}"
+            //           git push https://${git_token}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:ci-updates                                         
+            //       '''
 
-            } 
+            // }
+            withCredentials([string(credentialsId: 'github_token', variable: 'git_token')]) {
+            sh """
+                rm -rf gitops-clone
+                git clone https://${git_token}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git gitops-clone
+                cd gitops-clone
+
+                git checkout ci-updates
+                git pull --rebase origin ci-updates
+
+                sed -i "s|image: bhars77/spring-boot-app:.*|image: bhars77/spring-boot-app:${BUILD_NUMBER}|g" java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
+
+                git add .
+                git commit -m "Update image to version ${BUILD_NUMBER}"
+                git push origin ci-updates
+            """
+        }
+ 
         }
     }
     
