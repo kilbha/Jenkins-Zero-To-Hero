@@ -8,7 +8,7 @@ pipeline {
   stages {    
     stage('Checkout') {
       steps {
-          // sh 'sudo rm -rf /var/lib/jenkins/workspace/sprint-boot-app-pipeline-2 || true'
+          sh 'sudo rm -rf /var/lib/jenkins/workspace/sprint-boot-app-pipeline-2 || true'
           // deleteDir()          
           // sh "git config --global --add safe.directory '${WORKSPACE}'"
           // sh 'rm -rf /var/lib/jenkins/workspace/sprint-boot-app-pipeline-1'
@@ -103,7 +103,7 @@ pipeline {
 
             // }
             withCredentials([string(credentialsId: 'github_token', variable: 'git_token')]) {
-            sh """
+            sh '''
                 rm -rf gitops-clone
                 git clone https://${git_token}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git gitops-clone
                 cd gitops-clone
@@ -116,8 +116,8 @@ pipeline {
                 git add .
                 git commit -m "Update image to version ${BUILD_NUMBER}"
                 git push origin ci-updates
-            """
-        }
+              '''
+            }
  
         }
     }
